@@ -51,7 +51,6 @@ class Particle:
         for i in range(len(self.position)):
             r1 = random.random()
             r2 = random.random()
-            
             cognitiveComponent = c1 * r1 * (self.bestPosition[i] - self.position[i])
             socialComponent = c2 * r2 * (globalBestPosition[i] - self.position[i])
             inertiaComponent = chooseW * self.velocity[i]
@@ -73,9 +72,10 @@ class Particle:
 
     def verifyOutLimit(self,minLimit,maxLimit):
         for i in range(len(self.position)):
-            if not(minLimit <= i <= maxLimit): 
-                print(f"Partícula {self} fora dos limites")
-                self.position = [minLimit,maxLimit]
+            if self.position[i] < minLimit:
+                self.position[i] = minLimit
+            elif self.position[i] > maxLimit:
+                self.position[i] = maxLimit
 
 def pso(minLimit,maxLimit,dimentions,funcFit,particles,interations,typeW,w,wMin,wMax,cooperation,c1,c2):
 
@@ -88,7 +88,8 @@ def pso(minLimit,maxLimit,dimentions,funcFit,particles,interations,typeW,w,wMin,
     # print(f"Primeiro melhor valor global {bestValueGlobal}")
     # print("==================================================================")
 
-
+    c = []
+    melhores = []
     for interation in range(interations):
 
         if(typeW == "constant"):
@@ -135,15 +136,40 @@ def pso(minLimit,maxLimit,dimentions,funcFit,particles,interations,typeW,w,wMin,
             if (fit < bestValueGlobal):
                 bestValueGlobal = fit
                 bestGlobal = list(particle.position)
-           
+        c.append(interation) 
+        melhores.append(bestValueGlobal) 
 
             #c=c+1
 
-        #print(f"Iteração {interation + 1}/{interations} - Melhor valor global: {bestValueGlobal}")
+        # print(f"Iteração {interation + 1}/{interations} - Melhor valor global: {bestValueGlobal}")
     
-    print(f"Melhor solução encontrada: {bestGlobal} com valor: {bestValueGlobal}")
+    # plt.figure(figsize=(10, 6))
+    # plt.plot(c, melhores, label='Melhor Genoma', color='green', marker='o')
+    # plt.xlabel('Interação')
+    # plt.ylabel('Valor de Fitness')
+    # plt.title('Melhro valor global por Interação')
+    # plt.legend()
+    # plt.grid(True)
+    # plt.show()
+    # print(f"Melhor solução encontrada: {bestGlobal} com valor: {bestValueGlobal}")
 
     return bestValueGlobal
+
+# pso(
+#                 minLimit=-30,
+#                 maxLimit=30,
+#                 dimentions=30,
+#                 funcFit="rastrigin",
+#                 particles=30,
+#                 interations=100,
+#                 typeW="constant",
+#                 w=1,
+#                 wMax=0.7,
+#                 wMin=1.2,
+#                 cooperation="global",
+#                 c1=2.05,
+#                 c2=2.05
+#             )
 
 def plotGraft(scenario1, scenario2,scenario3, execution=30):
 
@@ -189,11 +215,11 @@ def plotGraft(scenario1, scenario2,scenario3, execution=30):
     plt.show()
 
 
-scenarios1 = {'minLimit':-100,"maxLimit":100,"dimentions":2,"funcFit":"sphere","particles":30,"interations":100,"typeW":"constant","w":1,"wMin":0.7,"wMax":1.2,"cooperation":"global","c1":2.05,"c2":2.05}
+scenarios1 = {'minLimit':-100,"maxLimit":100,"dimentions":30,"funcFit":"sphere","particles":30,"interations":100,"typeW":"constant","w":1,"wMin":0.7,"wMax":1.2,"cooperation":"global","c1":2.05,"c2":2.05}
         
-scenarios2 = {"minLimit":-100,"maxLimit":100,"dimentions":2,"funcFit":"rastrigin","particles":30,"interations":100,"typeW":"constant","w":1,"wMin":0.7,"wMax":1.2,"cooperation":"global","c1":2.05,"c2":2.05}
+scenarios2 = {"minLimit":-30,"maxLimit":30,"dimentions":30,"funcFit":"rastrigin","particles":30,"interations":100,"typeW":"constant","w":1,"wMin":0.7,"wMax":1.2,"cooperation":"global","c1":2.05,"c2":2.05}
 
-scenarios3 = {"minLimit":-100,"maxLimit":100,"dimentions":2,"funcFit":"rosenbrock","particles":30,"interations":100,"typeW":"constant","w":1,"wMin":0.7,"wMax":1.2,"cooperation":"global","c1":2.05,"c2":2.05}
+scenarios3 = {"minLimit":-5.12,"maxLimit":5.12,"dimentions":30,"funcFit":"rosenbrock","particles":30,"interations":100,"typeW":"constant","w":1,"wMin":0.7,"wMax":1.2,"cooperation":"global","c1":2.05,"c2":2.05}
 
 plotGraft(scenario1=scenarios1,
           scenario2=scenarios2,
